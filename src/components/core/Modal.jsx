@@ -23,9 +23,6 @@ function Modal({ showModal, setShowModal, title, children }) {
     setShowModal(false);
   };
 
-  console.log({ showModal });
-
-  // Rendering the modal based on the showModal state
   if (showModal) {
     return (
       <div
