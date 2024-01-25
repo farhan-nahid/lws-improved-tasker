@@ -1,4 +1,27 @@
-export default function TaskTableHeader() {
+import { useContext, useEffect, useState } from 'react';
+import { TaskContext } from '../context';
+
+export default function TaskTableHeader({
+  onModalIsOpenChange,
+  onDeleteTask,
+  data = [],
+}) {
+  const { dispatch } = useContext(TaskContext);
+
+  const [search, setSearch] = useState('');
+
+  const onChange = (value) => {
+    dispatch({ type: 'SEARCH_TASK', payload: value });
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(search.trim());
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   return (
     <div className='mb-14 items-center justify-between sm:flex'>
       <h2 className='text-2xl font-semibold max-sm:mb-4'>Your Tasks</h2>
@@ -11,6 +34,8 @@ export default function TaskTableHeader() {
                 id='search-dropdown'
                 className='z-20 block w-full bg-gray-800 px-4 py-2 pr-10 focus:outline-none'
                 placeholder='Search Task'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 required
               />
               <button
@@ -37,10 +62,17 @@ export default function TaskTableHeader() {
             </div>
           </div>
         </form>
-        <button className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold'>
+        <button
+          className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold'
+          onClick={() => onModalIsOpenChange(true, 'Add New Task')}
+        >
           Add Task
         </button>
-        <button className='rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold'>
+        <button
+          className='rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowedpapp'
+          onClick={() => onDeleteTask(true, 'Delete All')}
+          disabled={!data?.length}
+        >
           Delete All
         </button>
       </div>

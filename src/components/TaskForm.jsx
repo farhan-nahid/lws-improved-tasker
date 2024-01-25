@@ -1,6 +1,66 @@
-export default function TaskForm() {
+import { useContext, useState } from 'react';
+import { toast } from 'react-toastify';
+import { TaskContext } from '../context';
+
+export default function TaskForm({ buttonText, onCloseModal }) {
+  const { state, dispatch } = useContext(TaskContext);
+  const [errorMessageShow, setErrorMessageShow] = useState(false);
+  const [fromData, setFormData] = useState(
+    state?.taskId && state.tasks.find((item) => item.id === state.taskId)
+  );
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const getMaxId = (data) => {
+    const maxId = data.length
+      ? data.reduce((prev, current) =>
+          prev && prev.id > current.id ? prev.id : current.id
+        )
+      : 0;
+
+    return maxId + 1;
+  };
+
+  const handelSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      !fromData?.title ||
+      !fromData?.description ||
+      !fromData?.tags ||
+      !fromData?.priority
+    ) {
+      setErrorMessageShow(true);
+      return;
+    }
+
+    if (state?.taskId) {
+      dispatch({ type: 'UPDATE_TASK', payload: fromData });
+      toast.success('Task Updated Successfully');
+    } else {
+      dispatch({
+        type: 'ADD_TASK',
+        payload: {
+          id: getMaxId(state.tasks),
+          title: fromData.title,
+          description: fromData.description,
+          tags: fromData.tags,
+          priority: fromData.priority,
+          isFavorite: false,
+        },
+      });
+      toast.success('Task Added Successfully');
+    }
+
+    onCloseModal();
+  };
+
   return (
-    <form action=''>
+    <form action='' onSubmit={handelSubmit}>
       <div className='space-y-9 text-white lg:space-y-10'>
         <div className='space-y-2 lg:space-y-3'>
           <label htmlFor='title'>Title</label>
@@ -9,8 +69,12 @@ export default function TaskForm() {
             type='text'
             name='title'
             id='title'
-            required
+            value={fromData?.title ?? ''}
+            onChange={handleChange}
           />
+          {errorMessageShow && !fromData?.title && (
+            <p className='text-red-500 text-sm'>Title is required</p>
+          )}
         </div>
 
         <div className='space-y-2 lg:space-y-3'>
@@ -20,8 +84,12 @@ export default function TaskForm() {
             type='text'
             name='description'
             id='description'
-            required
+            value={fromData?.description ?? ''}
+            onChange={handleChange}
           ></textarea>
+          {errorMessageShow && !fromData?.description && (
+            <p className='text-red-500 text-sm'>Description is required</p>
+          )}
         </div>
 
         <div className='grid-cols-2 gap-x-4 max-md:space-y-9 md:grid lg:gap-x-10 xl:gap-x-20'>
@@ -32,8 +100,13 @@ export default function TaskForm() {
               type='text'
               name='tags'
               id='tags'
-              required
+              value={fromData?.tags ?? ''}
+              onChange={handleChange}
             />
+
+            {errorMessageShow && !fromData?.tags && (
+              <p className='text-red-500 text-sm'>Tags is required</p>
+            )}
           </div>
 
           <div className='space-y-2 lg:space-y-3'>
@@ -42,13 +115,18 @@ export default function TaskForm() {
               className='block w-full cursor-pointer rounded-md bg-[#2D323F] px-3 py-2.5'
               name='priority'
               id='priority'
-              required
+              value={fromData?.priority ?? ''}
+              onChange={handleChange}
             >
               <option value=''>Select Priority</option>
               <option value='low'>Low</option>
               <option value='medium'>Medium</option>
               <option value='high'>High</option>
             </select>
+
+            {errorMessageShow && !fromData?.priority && (
+              <p className='text-red-500 text-sm'>Priority is required</p>
+            )}
           </div>
         </div>
       </div>
@@ -58,7 +136,7 @@ export default function TaskForm() {
           type='submit'
           className='rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80'
         >
-          Create new Task
+          {buttonText}
         </button>
       </div>
     </form>
