@@ -69,7 +69,7 @@ export default function TaskTableHeader({
           Add Task
         </button>
         <button
-          className='rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowedpapp'
+          className='rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed'
           onClick={() => onDeleteTask(true, 'Delete All')}
           disabled={!data?.length}
         >
