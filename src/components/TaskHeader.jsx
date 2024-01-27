@@ -25,7 +25,7 @@ export default function TaskHeader({ data = [] }) {
       modalType: 'ADD_NEW_TASK',
       payload: {
         title: 'Add New Task',
-        buttonText: 'Add Task',
+        buttonText: 'Create new Task',
       },
     });
   };
