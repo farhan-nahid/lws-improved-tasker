@@ -41,7 +41,9 @@ export default function TaskTable({ data = [] }) {
         <div className='flex items-center justify-center h-[300px]'>
           <div className='flex flex-col items-center'>
             <img src={empty} alt='' className='h-20 w-20' />
-            <p className='text-2xl font-semibold mt-5 text-[#FE1A1AB5]'>No Task Found</p>
+            <p className='text-2xl font-semibold mt-5 text-[#FE1A1AB5]'>
+              Task List is empty!
+            </p>
           </div>
         </div>
       )}
