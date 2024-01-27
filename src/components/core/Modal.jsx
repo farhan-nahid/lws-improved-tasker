@@ -1,6 +1,10 @@
+import { useContext } from 'react';
 import cross from '../../assets/cross.png';
+import { ModalContext } from '../../context';
 
-function Modal({ isModalOpen, onCloseModal, title, children }) {
+function Modal({ isModalOpen, onCloseModal, children }) {
+  const { modalState } = useContext(ModalContext);
+
   if (isModalOpen) {
     return (
       <div
@@ -16,7 +20,7 @@ function Modal({ isModalOpen, onCloseModal, title, children }) {
           </div>
 
           <h2 className='mb-9 text-center text-2xl font-bold text-white lg:mb-11 lg:text-[28px]'>
-            {title}
+            {modalState.modalProps.title}
           </h2>
           {children}
         </div>

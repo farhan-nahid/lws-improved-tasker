@@ -1,7 +1,7 @@
-import { initialData } from '../data/data';
+import { initialTasks } from '../data/data';
 
 const initialState = {
-  tasks: initialData,
+  tasks: initialTasks,
   taskId: null,
   taskSearch: '',
 };
@@ -19,6 +19,7 @@ function TaskReducer(state = initialState, action) {
         ...state,
         tasks: [],
       };
+
     case 'ADD_TASK':
       return {
         ...state,
@@ -42,12 +43,14 @@ function TaskReducer(state = initialState, action) {
         ),
       };
     }
-    case 'ADD_TASKId':
+
+    case 'ADD_TASK_ID':
       return {
         ...state,
         taskId: action.payload,
       };
-    case 'RESET_TASK':
+
+    case 'RESET_TASK_ID':
       return {
         ...state,
         taskId: null,

@@ -1,11 +1,7 @@
 import empty from '../assets/empty.png';
 import TaskList from './TaskList';
 
-export default function TaskTable({
-  onModalIsOpenChange,
-  onModalDeleteIsOpenChange,
-  data = [],
-}) {
+export default function TaskTable({ data = [] }) {
   return (
     <>
       {data?.length > 0 ? (
@@ -37,12 +33,7 @@ export default function TaskTable({
           </thead>
           <tbody>
             {data?.map((item) => (
-              <TaskList
-                key={item.id}
-                item={item}
-                onModalIsOpenChange={onModalIsOpenChange}
-                onModalDeleteIsOpenChange={onModalDeleteIsOpenChange}
-              />
+              <TaskList key={item.id} item={item} />
             ))}
           </tbody>
         </table>

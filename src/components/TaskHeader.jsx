@@ -1,12 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
-import { TaskContext } from '../context';
+import { ModalContext, TaskContext } from '../context';
 
-export default function TaskTableHeader({
-  onModalIsOpenChange,
-  onDeleteTask,
-  data = [],
-}) {
+export default function TaskHeader({ data = [] }) {
   const { dispatch } = useContext(TaskContext);
+  const { modalDispatch } = useContext(ModalContext);
 
   const [search, setSearch] = useState('');
 
@@ -21,6 +18,28 @@ export default function TaskTableHeader({
 
     return () => clearTimeout(timeout);
   }, [search]);
+
+  const handelAddTask = () => {
+    modalDispatch({
+      type: 'OPEN_FROM_MODAL',
+      modalType: 'ADD_NEW_TASK',
+      payload: {
+        title: 'Add New Task',
+        buttonText: 'Add Task',
+      },
+    });
+  };
+
+  const handelDeleteTask = () => {
+    modalDispatch({
+      type: 'OPEN_DELETE_MODAL',
+      modalType: 'ALL_DELETE',
+      payload: {
+        title: 'Delete All Task',
+        buttonText: 'Delete All Task',
+      },
+    });
+  };
 
   return (
     <div className='mb-14 items-center justify-between sm:flex'>
@@ -64,13 +83,13 @@ export default function TaskTableHeader({
         </form>
         <button
           className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold'
-          onClick={() => onModalIsOpenChange(true, 'Add New Task')}
+          onClick={handelAddTask}
         >
           Add Task
         </button>
         <button
           className='rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed'
-          onClick={() => onDeleteTask(true, 'Delete All')}
+          onClick={handelDeleteTask}
           disabled={!data?.length}
         >
           Delete All

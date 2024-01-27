@@ -1,28 +1,40 @@
 import { useContext } from 'react';
-import { TaskContext } from '../context';
+import { toast } from 'react-toastify';
+import { ModalContext, TaskContext } from '../context';
 import { colors } from '../data/data';
 
-export default function TaskList({
-  item,
-  onModalIsOpenChange,
-  onModalDeleteIsOpenChange,
-}) {
+export default function TaskList({ item }) {
   const { dispatch } = useContext(TaskContext);
+  const { modalDispatch } = useContext(ModalContext);
 
   const handleEditTask = () => {
-    onModalIsOpenChange(true, 'Edit Task');
-
-    dispatch({ type: 'ADD_TASKId', payload: item.id });
+    modalDispatch({
+      type: 'OPEN_FROM_MODAL',
+      modalType: 'UPDATE_TASK',
+      payload: {
+        title: 'Edit Task',
+        buttonText: 'Update Task',
+      },
+    });
+    dispatch({ type: 'ADD_TASK_ID', payload: item.id });
   };
 
   const handelDeleteTask = () => {
-    dispatch({ type: 'ADD_TASKId', payload: item.id });
+    dispatch({ type: 'ADD_TASK_ID', payload: item.id });
 
-    onModalDeleteIsOpenChange(true, 'Delete');
+    modalDispatch({
+      type: 'OPEN_DELETE_MODAL',
+      modalType: 'SINGLE_DELETE',
+      payload: {
+        title: 'Delete Task',
+        buttonText: 'Delete Task',
+      },
+    });
   };
 
   const toggleFavorite = () => {
     dispatch({ type: 'TOGGLE_FAVORITE', payload: item.id });
+    toast.success('Task favourite status updated successfully');
   };
 
   return (

@@ -1,9 +1,10 @@
 import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
-import { TaskContext } from '../context';
+import { ModalContext, TaskContext } from '../context';
 
-export default function TaskForm({ buttonText, onCloseModal }) {
+export default function TaskForm() {
   const { state, dispatch } = useContext(TaskContext);
+  const { modalState, modalDispatch } = useContext(ModalContext);
   const [errorMessageShow, setErrorMessageShow] = useState(false);
   const [fromData, setFormData] = useState(
     state?.taskId && state.tasks.find((item) => item.id === state.taskId)
@@ -20,7 +21,7 @@ export default function TaskForm({ buttonText, onCloseModal }) {
       ? data.reduce((prev, current) =>
           prev && prev.id > current.id ? prev.id : current.id
         )
-      : 0;
+      : -1;
 
     return maxId + 1;
   };
@@ -38,7 +39,7 @@ export default function TaskForm({ buttonText, onCloseModal }) {
       return;
     }
 
-    if (state?.taskId) {
+    if (modalState.modalType === 'UPDATE_TASK') {
       dispatch({ type: 'UPDATE_TASK', payload: fromData });
       toast.success('Task Updated Successfully');
     } else {
@@ -55,8 +56,9 @@ export default function TaskForm({ buttonText, onCloseModal }) {
       });
       toast.success('Task Added Successfully');
     }
-
-    onCloseModal();
+    e.target.reset();
+    setFormData(() => ({}));
+    modalDispatch({ type: 'CLOSE_FROM_MODAL' });
   };
 
   return (
@@ -136,7 +138,7 @@ export default function TaskForm({ buttonText, onCloseModal }) {
           type='submit'
           className='rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80'
         >
-          {buttonText}
+          {modalState.modalProps.buttonText}
         </button>
       </div>
     </form>

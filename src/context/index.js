@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
 const TaskContext = createContext();
+const ModalContext = createContext();
 
-export { TaskContext };
+export { ModalContext, TaskContext };
